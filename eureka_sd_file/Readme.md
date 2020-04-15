@@ -27,5 +27,4 @@ scrape_configs:
 注意此处target.json的路径应该和上面生成的路径一致
 
 #### 如何在docker中运行?
-
-镜像制作中
+执行`sh run_docker.sh`进行构建和执行(需要按需修改脚本中的eureka地址和生产模板文件地址)

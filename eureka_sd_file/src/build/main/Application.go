@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 )
+import _ "net/http/pprof"
 import "github.com/tidwall/gjson"
 
 //prometheus file_sd_config 结构体
@@ -43,16 +44,23 @@ type Lable struct {
 }
 
 /*
+ * 外部依赖:
+ * go get -v -u github.com/tidwall/gjson
+ * 测试运行启动参数:
  * go run Application.go http://localhost:8848/eureka/apps /tmp/target.json
+ * 编译:
  * CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build application.go
  * CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build application.go
  */
 func main() {
+	pproListent()
+
 	var url = ""
 	var targetFile = ""
-	if len(os.Args) == 2 {
-		url = os.Args[0]
-		targetFile = os.Args[1]
+	log.Printf("args:[%s],\n args length:[%s]",os.Args, len(os.Args))
+	if len(os.Args) == 3 {
+		url = os.Args[1]
+		targetFile = os.Args[2]
 		log.Printf("使用自定义配置eureka地址[%s]和配置文件生成地址[%s]", url, targetFile)
 	} else {
 		url = "http://localhost:8848/eureka/apps"
@@ -62,6 +70,11 @@ func main() {
 
 	loopLoadConfig(url, targetFile)
 	log.Println("哈?结束了!")
+}
+
+func pproListent(){
+	// 开启pprof，监听请求
+	http.ListenAndServe(":9999", nil)
 }
 
 func loopLoadConfig(url string, targetFile string) {
