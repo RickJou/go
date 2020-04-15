@@ -3,8 +3,8 @@
 docker build -t eureka_sd_file .
 
 docker run -itd \
---memory="7m" \
---memory-swap="7m" \
+--memory="32m" \
+--memory-swap="33m" \
 --cpus="0.1" \
 -v /data/prometheus:/data/prometheus \
 --name eureka_sd_file \

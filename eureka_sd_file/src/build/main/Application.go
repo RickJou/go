@@ -2,14 +2,15 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"time"
 )
 import _ "net/http/pprof"
-import "github.com/tidwall/gjson"
 
 //prometheus file_sd_config 结构体
 /*
@@ -53,11 +54,18 @@ type Lable struct {
  * CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build application.go
  */
 func main() {
-	pproListent()
+	// 开启pprof
+	/*go func() {
+		ip := "0.0.0.0:6060"
+		if err := http.ListenAndServe(ip, nil); err != nil {
+			log.Printf("start pprof failed on %s\n", ip)
+			os.Exit(1)
+		}
+	}()*/
 
 	var url = ""
 	var targetFile = ""
-	log.Printf("args:[%s],\n args length:[%s]",os.Args, len(os.Args))
+	log.Printf("args:[%s],\n args length:[%s]", os.Args, len(os.Args))
 	if len(os.Args) == 3 {
 		url = os.Args[1]
 		targetFile = os.Args[2]
@@ -72,20 +80,11 @@ func main() {
 	log.Println("哈?结束了!")
 }
 
-func pproListent(){
-	// 开启pprof，监听请求
-	http.ListenAndServe(":9999", nil)
-}
-
 func loopLoadConfig(url string, targetFile string) {
-	var httpHeader = map[string]string{
-		"Content-Type": "application/json",
-		"Accept":       "application/json",
-	}
-
-	for now := range time.Tick(5 * time.Second) {
+	for now := range time.Tick(10 * time.Second) {
 		log.Printf("定时加载eureka最新实例配置开始..." + now.String())
-		eurekaInstanceToPrometheusFileSDConfig(url, httpHeader, targetFile)
+		eurekaInstanceToPrometheusFileSDConfig(url, targetFile)
+		runtime.GC()
 	}
 }
 
@@ -96,10 +95,14 @@ eureka rest api 文档只有netflix[https://github.com/Netflix/eureka/wiki/Eurek
 spring cloud netflix则没有找到文档,只能参照netflix的文档,和spring cloud eureka源码进行推测
 gjson语法文档[https://github.com/tidwall/gjson/blob/master/SYNTAX.md]
 */
-func eurekaInstanceToPrometheusFileSDConfig(url string, httpHeaders map[string]string, targetFile string) {
-	var resp = SendHttpGet(url, httpHeaders)
+func eurekaInstanceToPrometheusFileSDConfig(url string, targetFile string) {
+	var httpHeader = map[string]string{
+		"Content-Type": "application/json",
+		"Accept":       "application/json",
+	}
+	var resp = SendHttpGet(url, httpHeader)
 	//var res = gjson.Get(resp,"applications.application")
-	//fmt.Println(res)
+	log.Println(resp)
 
 	//解析实例地址
 	var allInstance = gjson.Get(resp, "applications.application.#.instance.#.instanceId")
@@ -158,29 +161,27 @@ func Exists(path string) bool {
 //发送http请求
 func SendHttpGet(url string, httpHeaders map[string]string) string {
 	//set url and headers
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", url, nil)
+	var client = &http.Client{}
+	var req, err = http.NewRequest("GET", url, nil)
 	for k, v := range httpHeaders {
 		req.Header.Set(k, v)
 	}
 	//send http request
-	resp, err := client.Do(req)
+	var resp, err2 = client.Do(req)
 
 	//error handler
-	if err != nil {
+	if err2 != nil {
 		panic(err)
 	}
 	defer resp.Body.Close()
 
 	//response handler
 	if resp.StatusCode == http.StatusOK {
-		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		var bodyBytes, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
 			log.Panicf("返回成功,读取流失败:%s", err)
 		}
-		bodyString := string(bodyBytes)
-		//log.Println(bodyString)
-		return bodyString
+		return string(bodyBytes)
 	} else if err != nil {
 		log.Panicf("返回码[%s],错误:[%s]", resp.Status, err)
 	}
