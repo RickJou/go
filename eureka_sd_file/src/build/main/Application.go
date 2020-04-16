@@ -46,14 +46,14 @@ func main() {
 }
 
 func loopLoadConfig(url string, targetFile string) {
-	/*for range time.Tick(200 * time.Millisecond) {
-		log.Printf("定时加载eureka最新实例配置开始...")
-		eureka.InstanceToPrometheusFileSDConfig(url, targetFile)
-	}*/
-	for{
-		time.Sleep(time.Duration(200)*time.Millisecond)
+	for range time.Tick(10 * time.Second) {
 		log.Printf("定时加载eureka最新实例配置开始...")
 		eureka.InstanceToPrometheusFileSDConfig(url, targetFile)
 	}
+	/*for{
+		//time.Sleep(time.Duration(200)*time.Millisecond)
+		log.Printf("定时加载eureka最新实例配置开始...")
+		eureka.InstanceToPrometheusFileSDConfig(url, targetFile)
+	}*/
 
 }

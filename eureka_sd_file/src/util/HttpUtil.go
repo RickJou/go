@@ -9,7 +9,7 @@ import (
 //发送http请求
 func SendHttpGet(url string, httpHeaders map[string]string) string {
 	//set url and headers
-	var client = &http.Client{}
+	var client = http.Client{}
 	var req, err = http.NewRequest("GET", url, nil)
 	for k, v := range httpHeaders {
 		req.Header.Set(k, v)

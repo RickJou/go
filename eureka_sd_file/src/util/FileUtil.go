@@ -4,10 +4,14 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 //create new file
 func CreateNewFile(path string, fileContent []byte) {
+	var parentFold = filepath.Dir(path)
+	os.MkdirAll(parentFold,0777)
+	os.Create(path)
 	var err = ioutil.WriteFile(path, fileContent, 0666)
 	if err != nil {
 		log.Printf("文件打开失败=%v\n", err)
