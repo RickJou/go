@@ -3,6 +3,7 @@
 docker build -t eureka_sd_file .
 
 docker run -itd \
+--restart=always \
 --memory="32m" \
 --memory-swap="32m" \
 --cpus="0.1" \
