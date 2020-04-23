@@ -79,7 +79,7 @@ func InstanceToPrometheusFileSDConfig(url string, targetFile string) {
 	//最终格式化好后的配置文件内容
 	var jsonFileStr, _ = json.Marshal(jobs)
 	var jsonFilePrettyContent = gjson.Get(string(jsonFileStr), "jobs.@pretty").String()
-
+	jsonFilePrettyContent = jsonFilePrettyContent+""
 	//删除原文件,写入到新文件
 	util.RemoveFile(targetFile)
 	util.CreateNewFile(targetFile, []byte(jsonFilePrettyContent))

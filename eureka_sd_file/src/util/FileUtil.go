@@ -1,8 +1,8 @@
 package util
 
 import (
+	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -14,9 +14,9 @@ func CreateNewFile(path string, fileContent []byte) {
 	os.Create(path)
 	var err = ioutil.WriteFile(path, fileContent, 0666)
 	if err != nil {
-		log.Printf("文件打开失败=%v\n", err)
+		fmt.Printf("文件打开失败=%v\n", err)
 	} else {
-		log.Printf("写入配置文件成功,chmod(%s,0666)", path)
+		fmt.Printf("写入配置文件成功,chmod(%s,0666)", path)
 		//授权目标文件状态
 		os.Chmod(path, 0666)
 	}
@@ -25,7 +25,7 @@ func CreateNewFile(path string, fileContent []byte) {
 //remove file if exists
 func RemoveFile(path string) {
 	if Exists(path) {
-		log.Printf("配置文件存在删除文件:%s", path)
+		fmt.Printf("配置文件存在删除文件:%s", path)
 		os.RemoveAll(path)
 	}
 }
