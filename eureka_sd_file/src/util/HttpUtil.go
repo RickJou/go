@@ -20,10 +20,14 @@ func SendHttpGet(url string, httpHeaders map[string]string) string {
 
 	//send http request
 	var resp, err2 = client.Do(req)
-	if resp != nil{
+	if resp != nil {
 		defer resp.Body.Close()
 	}
 
+	//地址连接不上时,返回为nil
+	if resp == nil {
+		return ""
+	}
 	//response handler
 	if resp.StatusCode == http.StatusOK {
 		var bodyBytes, err = ioutil.ReadAll(resp.Body)

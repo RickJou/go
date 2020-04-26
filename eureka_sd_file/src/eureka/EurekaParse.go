@@ -2,6 +2,7 @@ package eureka
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/tidwall/gjson"
 	"util"
 )
@@ -73,13 +74,19 @@ func InstanceToPrometheusFileSDConfig(url string, targetFile string) {
 		"Accept":       "application/json",
 	}
 	var resp = util.SendHttpGet(url, httpHeader)
+	if resp == "" {
+		//连接失败
+		fmt.Println("接口超时或无数据返回,请检查eureka地址是否正确.")
+		return
+	}
+
 	//解析json
 	var jobs = ParseJsonToJobs(resp)
 
 	//最终格式化好后的配置文件内容
 	var jsonFileStr, _ = json.Marshal(jobs)
 	var jsonFilePrettyContent = gjson.Get(string(jsonFileStr), "jobs.@pretty").String()
-	jsonFilePrettyContent = jsonFilePrettyContent+""
+	jsonFilePrettyContent = jsonFilePrettyContent + ""
 	//删除原文件,写入到新文件
 	util.RemoveFile(targetFile)
 	util.CreateNewFile(targetFile, []byte(jsonFilePrettyContent))
