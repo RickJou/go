@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-mkdir -p /data/grafana && chmod -R +755 /data/grafana && chmod g+s /data/grafana
+mkdir -p /data/grafana && chmod -R +777 /data/grafana && chmod g+s /data/grafana
 
 docker run -d \
 --name=grafana \

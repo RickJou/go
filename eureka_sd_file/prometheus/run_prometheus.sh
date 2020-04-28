@@ -2,7 +2,7 @@
 
 mkdir -p /data/prometheus
 mkdir -p /data/prometheus/tsdb
-chmod -R 755 /data/prometheus
+chmod -R 777 /data/prometheus
 
 cp -f ./prometheus.yml /pdata1/prometheus/
 
