@@ -2,7 +2,7 @@
 
 #### 启动不同环境脚本
 ```
-sh deploy/{evn}_run_eureka_sd.sh 
+sh deploy/run_{evn}_eureka_sd.sh 
 ```
 
 #### 启动prometheus
