@@ -20,12 +20,12 @@ func SendHttpGet(url string, httpHeaders map[string]string) string {
 
 	//send http request
 	var resp, err2 = client.Do(req)
-	if resp != nil {
+	if nil != resp {
 		defer resp.Body.Close()
 	}
 
 	//地址连接不上时,返回为nil
-	if resp == nil {
+	if nil == resp {
 		return ""
 	}
 	//response handler
