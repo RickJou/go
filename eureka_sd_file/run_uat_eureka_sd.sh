@@ -10,4 +10,4 @@ docker run -itd \
 -v /data/prometheus:/data/prometheus \
 -p 6060:6060 \
 --name eureka_sd_file \
-eureka_sd_file main http://10.43.110.11:8848/eureka/apps /pdata1/prometheus/target.json
+eureka_sd_file main http://10.43.110.11:8848/eureka/apps /data/prometheus/target.json
