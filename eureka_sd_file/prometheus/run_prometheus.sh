@@ -4,7 +4,7 @@ mkdir -p /data/prometheus
 mkdir -p /data/prometheus/tsdb
 chmod -R 777 /data/prometheus
 
-cp -f ./prometheus.yml /pdata1/prometheus/
+cp -f ./prometheus.yml /data/prometheus/
 
 docker run \
 --name="prometheus" \
