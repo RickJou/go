@@ -17,7 +17,7 @@ docker run \
 prom/prometheus \
 --web.enable-lifecycle \
 --config.file=/etc/prometheus/prometheus.yml \
---storage.tsdb.path=/data \
+--storage.tsdb.path=data\ \
 --storage.tsdb.retention.time=366d \
 --web.console.libraries=/usr/share/prometheus/console_libraries \
 --web.console.templates=/usr/share/prometheus/consoles
