@@ -5,5 +5,21 @@ global:
 
 scrape_configs:
   - job_name: prometheus
+    honor_timestamps: true
+    scrape_interval: 10s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    scheme: http
     static_configs:
-      - targets: ['localhost:9090']
+      - targets:
+          - localhost:9090
+  - job_name: eureka_microservers
+    honor_timestamps: true
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: /actuator/prometheus
+    scheme: http
+    file_sd_configs:
+      - files:
+          - /etc/prometheus/target.json
+        refresh_interval: 5m

@@ -12,13 +12,13 @@ func CreateNewFile(path string, fileContent []byte) {
 	var parentFold = filepath.Dir(path)
 	os.MkdirAll(parentFold,0777)
 	os.Create(path)
-	var err = ioutil.WriteFile(path, fileContent, 0666)
+	var err = ioutil.WriteFile(path, fileContent, 0777)
 	if err != nil {
 		fmt.Printf("文件打开失败=%v\n", err)
 	} else {
-		fmt.Printf("写入配置文件成功,chmod(%s,0666)", path)
+		fmt.Printf("写入配置文件成功,chmod(%s,0777)", path)
 		//授权目标文件状态
-		os.Chmod(path, 0666)
+		os.Chmod(path, 0777)
 	}
 }
 
