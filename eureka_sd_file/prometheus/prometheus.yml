@@ -22,4 +22,4 @@ scrape_configs:
     file_sd_configs:
       - files:
           - /etc/prometheus/target.json
-        refresh_interval: 5m
+        refresh_interval: 2m
