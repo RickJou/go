@@ -36,7 +36,7 @@ func main() {
 		targetFile = os.Args[2]
 		fmt.Printf("使用自定义配置eureka地址[%s]和配置文件生成地址[%s]", url, targetFile)
 	} else {
-		url = "http://localhost:8848/eureka/apps"
+		url = "http://localhost:8761/eureka/apps"
 		targetFile = "/tmp/target.json"
 		fmt.Printf("使用默认配置eureka地址[%s]和配置文件生成地址[%s]", url, targetFile)
 	}

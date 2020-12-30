@@ -50,16 +50,18 @@ func ParseJsonToJobs(resp string) Jobs {
 	*/
 
 	//解析实例地址
-	var allInstance = gjson.Get(resp, "applications.application.#.instance.#.instanceId")
+	var allInstances = gjson.Get(resp, "applications.application.#.instance")
 	//构造file_sd_config需要的文件结构内容
 	var lable = Lable{Job: "eureka_microservers"}
 	var job = Job{}
 	job.Labels = lable
 
 	//读取地址
-	for _, addressArr := range allInstance.Array() {
+	for _, addressArr := range allInstances.Array() {
 		for _, address := range addressArr.Array() {
-			job.Targets = append(job.Targets, address.String())
+			var ip = gjson.Get(address.Raw, "ipAddr").Str
+			var port = gjson.Get(address.Raw, "port.$").Raw
+			job.Targets = append(job.Targets, ip+":"+port)
 		}
 	}
 	//绑定最终结构
